@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    <head>
+
+        <title>{% block title %}{% endblock title %}</title>
+        <link rel="icon" type="image/x-icon" href="{% static "images/favicon.ico" %}">
+        <link rel="stylesheet" href="{% static "css/styles.css" %}">
+    </head>
+
+    <body>
+        <nav class="navbar-container">
+            <ul class="navbar-wrapper">
+                <li class="navbar-object"></li>
+                <li class="navbar-object"></li>
+            </ul>
+        </nav>
+
+        <main class="main-container">
+            {% block content %}
+            {% endblock content %}
+        </main>
+    </body>
+
+    <footer class="footer-container">
+        <p>If you crash my server, I crash your face!</p>
+    </footer>
+
+</html>

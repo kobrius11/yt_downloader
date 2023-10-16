@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="get">
+    {% csrf_token %}
+    <div class="search-bar-container">
+        <label for="search">Search: </label><br>
+        <input class="search-bar" placeholder="Search something :)" type="search" name="search" value="{{ request.POST.search }}">
+        <button class="button-primary" type="submit">GO!</button>
+    </div>
+</form>
+
+{% if queryset %}
+    {% for item in queryset %}
+        <p>{{ item.title }}</p>
+        <form action={% url "download" %} target="_blank" method="get">
+            {% csrf_token %}
+            <button type="submit" value={{ item.watch_url }} onclick={{ request.GET.value }} name='download'>Download</button>
+        </form>
+    {% endfor %}
+{% endif %}
+{% endblock content %}
