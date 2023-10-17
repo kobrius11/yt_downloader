@@ -1,10 +1,6 @@
 {% extends "base.html" %}
-{% block content %}
 
-{% include 'includes/search.html' %}
-{% include 'includes/paginator_nav.html' %}
-
-{% if is_paginated %}
+{% if object_list %}
     {% for item in object_list %}
         <p>{{ item.title }}</p>
         <form action={% url "download" %} target="_blank" method="get">
@@ -13,7 +9,5 @@
         </form>
     {% endfor %}
 {% endif %}
-{% include 'includes/paginator_pages.html' %}
-
 
 {% endblock content %}
