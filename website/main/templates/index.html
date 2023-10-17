@@ -9,8 +9,8 @@
     </div>
 </form>
 
-{% if queryset %}
-    {% for item in queryset %}
+{% if object_list %}
+    {% for item in object_list %}
         <p>{{ item.title }}</p>
         <form action={% url "download" %} target="_blank" method="get">
             {% csrf_token %}
@@ -18,4 +18,5 @@
         </form>
     {% endfor %}
 {% endif %}
+
 {% endblock content %}

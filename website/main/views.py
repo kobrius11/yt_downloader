@@ -15,34 +15,42 @@ def download(request):
             item.streams.get_audio_only().download()
         return HttpResponse('<script type="text/javascript">window.close()</script>')
 
-
 class ListView(generic.ListView):
     search_query = forms.SearchQuary
     template_name = "index.html"
+    paginate_by = 50
+    queryset = None
     
+    @property
+    def get_search_query(self):
+        return self.request.GET.get("search")
+    
+    def get_page(self):
+        if self.request.GET.get('page'):
+            print(self.request.GET.get('page'))
+            return int(self.request.GET.get('page'))
+        print(self.request.GET.get('page'))
+        return 1
+            
     def is_list(self):
-        return self.request.GET.get("search").__contains__("list")
+        return 'list' in self.get_search_query # self.request.GET.get("search").__contains__("list")
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        return render(request, self.template_name, context)
     
     def get_queryset(self):
-        queryset = None
-        if self.request.GET.get("search"):
+        if self.get_search_query():
             if self.is_list():
-                queryset = Playlist(self.request.GET.get("search")).videos
+                self.queryset = Playlist(self.get_search_query)
             else:
-                queryset = self.request.GET.get("search")
-        return queryset
+                self.queryset = self.get_search_query
+        return self.queryset
     
     def get_context_data(self, **kwargs) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
-        context["queryset"] = self.get_queryset()
+        context = super().get_context_data(object_list = self.get_queryset(), **kwargs)
+        context["object_list"] = context["paginator"].page(self.get_page()).object_list
+        context["url"] = self.request.get_full_path()
         return context
-    
-    
-    def get(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        if self.request.GET.get("download"):
-            url = self.request.GET.get("download")
-            item = YouTube(url)
-            item.streams.get_audio_only().download()
-        return super().get(request, *args, **kwargs)
 
         
