@@ -4,7 +4,8 @@ from django.shortcuts import render
 from django.views import generic
 from . import forms
 
-from pytube import YouTube, Playlist 
+from pytube import YouTube, Playlist
+import os
 
 # Create your views here.
 def download(request):
@@ -12,8 +13,20 @@ def download(request):
         if request.GET.get("download"):
             url = request.GET.get("download")
             item = YouTube(url)
-            item.streams.get_audio_only().download()
-        return HttpResponse('<script type="text/javascript">window.close()</script>')
+            file_path = item.streams.get_audio_only().download()
+            print("____________________________________")
+            print(item.streams.get_audio_only().audio_codec)
+            with open(file_path, 'rb') as fh:
+                HttpResponse('<script type="text/javascript">window.close()</script>')
+                response = HttpResponse(fh.read(), content_type="application/file")
+                response['Content-Disposition'] = 'inline; filename={}'.format(file_path)
+                
+                item.streams.get_audio_only().on_complete(file_path)
+                
+                os.remove(file_path)
+                return response
+            
+        return
 
 
 class ListView(generic.ListView):
@@ -46,7 +59,6 @@ class ListView(generic.ListView):
     def get_context_data(self, **kwargs) -> dict[str, Any]:
         if self.get_queryset():
             context = super().get_context_data(**kwargs)
-            len(context["page_obj"].object_list) * self.get_page
             context["object_list"] = self.get_queryset().videos[(len(context["page_obj"].object_list) * (self.get_page -1)): (len(context["page_obj"].object_list) * self.get_page)]
             return context
 
