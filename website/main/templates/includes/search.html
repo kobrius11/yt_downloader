@@ -1,5 +1,6 @@
-<form action="{{ request.path }}" method="get">
+<form action="{{ request.path }}" method="post">
+    {% csrf_token %}
     <input class="text-wrapper-2 overlap" name="query" type="text" value="{{ request.GET.query }}">
     <button class="overlap-group" type="submit">&#128269;</button>
-    {% if request.GET.query %}<a href="{{ request.path }}">clear</a>{% endif %}
+    {% if request.POST.query %}<a href="{{ request.path }}">clear</a>{% endif %}
 </form>

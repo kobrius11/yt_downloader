@@ -19,5 +19,5 @@ from . import views
 
 urlpatterns = [
     path("", views.ListView.as_view(), name="index"),
-    path("download", views.download, name="download")
+    path("download/<watch_id>", views.download, name="download")
 ]

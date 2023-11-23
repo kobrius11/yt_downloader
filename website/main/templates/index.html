@@ -4,15 +4,10 @@
 {% include 'includes/search.html' %}
 {% include 'includes/paginator_nav.html' %}
 
-{% if is_paginated %}
-    {% for item in object_list %}
-        <p>{{ item.title }}</p>
-        <form action={% url "download" %} target="_blank" method="get">
-            {% csrf_token %}
-            <button class="download-button" type="submit" value={{ item.watch_url }} onclick={{ request.GET.value }} name='download'>Download</button>
-        </form>
-    {% endfor %}
-{% endif %}
+{% for item in object_list %}
+    <p>{{ item.title }}</p>
+    <a href="{% url 'download' item.video_id %}">Download</a>
+{% endfor %}
 {% include 'includes/paginator_pages.html' %}
 
 
