@@ -13,8 +13,16 @@ fi
 
 pip install -r requirements.txt
 
-if [ ! -f "website/local_settings.py" ]; then
-    echo "SECRET_KEY='PleaseChangeMe:('" > website/local_settings.py
+if [ ! -f "website/website/local_settings.py" ]; then
+    echo "DJANGO_SECRET_KEY='PleaseChangeMe'" > website/website/local_settings.py
+
+    SECRET_KEY=$(python3 website/manage.py shell -c "
+from django.core.management.utils import get_random_secret_key
+print(get_random_secret_key())
+")
+
+    echo "DJANGO_SECRET_KEY='${SECRET_KEY}'" > website/website/local_settings.py
+
 fi
 
 

@@ -23,6 +23,13 @@ venv/scripts/activate #on windows
 # to install dependencies
 pip install -r requirements.txt
 
+# create website/website/local_settings.py
+echo "DJANGO_SECRET_KEY='thisShouldBeValidDjangoSecretKey'" > website/website/local_settings.py
+
+# you can generate django secret key using
+python3 website/manage.py shell -c "from django.core.management.utils import get_random_secret_key
+print(get_random_secret_key())"
+
 # to run django server
 python3 website/manage.py runserver 
 ```
