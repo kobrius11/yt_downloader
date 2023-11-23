@@ -1,5 +1,6 @@
 TODO:
 - fix slow page loding (25s)
+-- setup channels, since the issue is not pytube, but django pagination(listView)
 - front end
 
 # Usage:

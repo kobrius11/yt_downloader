@@ -18,8 +18,8 @@ def download(request, watch_id):
             print(url.streams.get_audio_only().audio_codec)
             with open(file_path, 'rb') as fh:
                 HttpResponse('<script type="text/javascript">window.close()</script>')
-                response = HttpResponse(fh.read(), content_type="application/file")
-                response['Content-Disposition'] = 'inline; filename={}'.format(file_path)
+                response = HttpResponse(fh.read(), content_type="audio/mpeg")
+                response['Content-Disposition'] = 'attachment; filename={}.mp3'.format(url.author + " - " + url.title)
                 
                 url.streams.get_audio_only().on_complete(file_path)
                 
@@ -31,11 +31,13 @@ def download(request, watch_id):
 
 class ListView(generic.ListView):
     template_name = "index.html"
-    paginate_by = 100
+    paginate_by = 2
     queryset = None
     
     @property
     def get_search_query(self):
+        if self.request.POST.get("query") is None and self.request.session:
+            return self.request.session['query']
         return self.request.POST.get("query")
     
     @property
@@ -84,5 +86,4 @@ class ListView(generic.ListView):
     def post(self, request, *args, **kwargs):
         query_param = self.request.POST.get('query', '')
         self.request.session['query'] = query_param
-        
         return self.get(request, *args, **kwargs)
