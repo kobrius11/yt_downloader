@@ -9,7 +9,7 @@
         <p>{{ item.title }}</p>
         <form action={% url "download" %} target="_blank" method="get">
             {% csrf_token %}
-            <button type="submit" value={{ item.watch_url }} onclick={{ request.GET.value }} name='download'>Download</button>
+            <button class="download-button" type="submit" value={{ item.watch_url }} onclick={{ request.GET.value }} name='download'>Download</button>
         </form>
     {% endfor %}
 {% endif %}
