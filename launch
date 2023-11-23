@@ -13,6 +13,11 @@ fi
 
 pip install -r requirements.txt
 
+if [ ! -f "website/local_settings.py" ]; then
+    echo "SECRET_KEY='PleaseChangeMe:('" > website/local_settings.py
+fi
+
+
 python3 website/manage.py runserver
 
 exit 0
