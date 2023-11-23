@@ -1,5 +1,5 @@
 TODO:
-- fix slow process
+- fix slow page loding (25s)
 - front end
 
 # Usage:
