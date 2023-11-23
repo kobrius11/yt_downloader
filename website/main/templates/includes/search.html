@@ -1,4 +1,4 @@
-<form action="{{ request.path }}" method="post">
+<form class="search-bar" action="{{ request.path }}" method="post">
     {% csrf_token %}
     <input class="text-wrapper-2 overlap" name="query" type="text" value="{{ request.GET.query }}">
     <button class="overlap-group" type="submit">&#128269;</button>

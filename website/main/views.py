@@ -36,8 +36,6 @@ class ListView(generic.ListView):
     
     @property
     def get_search_query(self):
-        if self.request.POST.get("query") is None:
-            return self.request.session["query"]
         return self.request.POST.get("query")
     
     @property
@@ -51,15 +49,15 @@ class ListView(generic.ListView):
         """
         :return: True if 'list' in url params
         """
-        return 'list' in self.get_search_query # self.request.GET.get("search").__contains__("list")
+        if self.get_search_query:
+            return 'list' in self.get_search_query # self.request.GET.get("search").__contains__("list")
     
     def get_queryset(self):
-        if self.get_search_query:
-            if self.is_list:
-                self.queryset = self.get_cached_playlist(self.get_search_query)
-                print(len(self.queryset))
-            else:
-                self.queryset = [YouTube(self.get_search_query)]
+        if self.is_list:
+            self.queryset = self.get_cached_playlist(self.get_search_query)
+            print(len(self.queryset))
+        elif self.is_list is not None:
+            self.queryset = [YouTube(self.get_search_query)]
         return self.queryset
     
     def get_cached_playlist(self, query):
@@ -73,13 +71,15 @@ class ListView(generic.ListView):
         return cached_playlist
     
     def get_context_data(self, **kwargs) -> dict[str, Any]:
-        context = super().get_context_data(**kwargs)
+        if self.queryset:
+            context = super().get_context_data(**kwargs)
+            return context
+        return
         # if self.paginate_by:
         #     # start_index = len(context["page_obj"].object_list) * (self.get_page -1)
         #     # end_index = len(context["page_obj"].object_list) * self.get_page
         #     context["object_list"] = context["object_list"] = context['paginator'].get_page(self.get_page).object_list
         #     return context
-        return context
 
     def post(self, request, *args, **kwargs):
         query_param = self.request.POST.get('query', '')

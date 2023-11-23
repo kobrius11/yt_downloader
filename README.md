@@ -1,4 +1,8 @@
 TODO:
-- fix playlist url params (only accepts /playlist/), should accept everything
+- fix slow process
 - front end
+
+# Usage:
+
+1. install requirements
 

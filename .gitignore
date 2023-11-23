@@ -161,3 +161,5 @@ cython_debug/
 
 data/
 all_data/
+
+launch
