@@ -14,8 +14,6 @@ def download(request, watch_id):
         if watch_id:
             url = YouTube(f"https://youtube.com/watch?v={watch_id}")
             file_path = url.streams.get_audio_only().download()
-            print("____________________________________")
-            print(url.streams.get_audio_only().audio_codec)
             with open(file_path, 'rb') as fh:
                 HttpResponse('<script type="text/javascript">window.close()</script>')
                 response = HttpResponse(fh.read(), content_type="audio/mpeg")
@@ -31,13 +29,13 @@ def download(request, watch_id):
 
 class ListView(generic.ListView):
     template_name = "index.html"
-    paginate_by = 2
+    paginate_by = 10
     queryset = None
     
     @property
     def get_search_query(self):
         if self.request.POST.get("query") is None and self.request.session:
-            return self.request.session['query']
+            return self.request.session.get("query", None)
         return self.request.POST.get("query")
     
     @property
@@ -77,11 +75,6 @@ class ListView(generic.ListView):
             context = super().get_context_data(**kwargs)
             return context
         return
-        # if self.paginate_by:
-        #     # start_index = len(context["page_obj"].object_list) * (self.get_page -1)
-        #     # end_index = len(context["page_obj"].object_list) * self.get_page
-        #     context["object_list"] = context["object_list"] = context['paginator'].get_page(self.get_page).object_list
-        #     return context
 
     def post(self, request, *args, **kwargs):
         query_param = self.request.POST.get('query', '')

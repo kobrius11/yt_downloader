@@ -28,5 +28,7 @@ fi
 
 python3 website/manage.py runserver
 
+rm -f /var/tmp/django_cache/*.djcache
+
 exit 0
 
